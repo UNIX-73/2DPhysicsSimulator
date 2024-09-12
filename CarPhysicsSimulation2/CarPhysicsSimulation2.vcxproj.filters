@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="src">
+      <UniqueIdentifier>{e7b71fc0-d58c-4dd9-907e-a0856afb8ed4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation">
+      <UniqueIdentifier>{374a3cbb-88b3-46ad-8ab8-66c9023ac4d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationState">
+      <UniqueIdentifier>{2325b0c8-a4e3-48ee-81ff-69f2bce2860b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager">
+      <UniqueIdentifier>{05aa1b08-fbff-46df-9b40-35be0d98c22d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\Physics">
+      <UniqueIdentifier>{ffdf6654-fdd5-41df-b9e3-38ebe41fd4e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\Physics\PhysicsState">
+      <UniqueIdentifier>{1ed15fff-3e94-4822-be4f-f4b3a589d1b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\Physics\PhysicsState\PhysicsObject">
+      <UniqueIdentifier>{7b814fc5-c364-4c0c-a8c4-693e80ed138f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\Graphics">
+      <UniqueIdentifier>{34d4103a-8159-4f09-8cab-9146f7dbf5bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\Graphics\GraphicObject">
+      <UniqueIdentifier>{c5c2ae2d-5dd9-4e39-b3a2-89b9f8da6aaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\TimerManager">
+      <UniqueIdentifier>{26ee32e9-2f8e-49be-a555-937bc293eceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\InputManager">
+      <UniqueIdentifier>{8885bf47-dd85-455c-b853-272f7bbe664a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Utils">
+      <UniqueIdentifier>{4dd647ef-fb96-45f6-8d4b-8ac3e6be8b6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\Physics\Constraints">
+      <UniqueIdentifier>{73b9bec1-5f48-4a12-b5fd-150921aecd35}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="graphicWindow.cpp">
+      <Filter>src\simulation\SimulationManager\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="V2.cpp">
+      <Filter>src\Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="graphicObject.cpp">
+      <Filter>src\simulation\SimulationManager\Graphics\GraphicObject</Filter>
+    </ClCompile>
+    <ClCompile Include="physicsObject.cpp">
+      <Filter>src\simulation\SimulationManager\Physics\PhysicsState\PhysicsObject</Filter>
+    </ClCompile>
+    <ClCompile Include="simulationManager.cpp">
+      <Filter>src\simulation\SimulationManager</Filter>
+    </ClCompile>
+    <ClCompile Include="physicsManager.cpp">
+      <Filter>src\simulation\SimulationManager\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="physicsState.cpp">
+      <Filter>src\simulation\SimulationManager\Physics\PhysicsState</Filter>
+    </ClCompile>
+    <ClCompile Include="timerManager.cpp">
+      <Filter>src\simulation\SimulationManager\TimerManager</Filter>
+    </ClCompile>
+    <ClCompile Include="inputManager.cpp">
+      <Filter>src\simulation\SimulationManager\InputManager</Filter>
+    </ClCompile>
+    <ClCompile Include="simulationState.cpp">
+      <Filter>src\simulation\SimulationState</Filter>
+    </ClCompile>
+    <ClCompile Include="constraint.cpp">
+      <Filter>src\simulation\SimulationManager\Physics\Constraints</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="graphicWindow.h">
+      <Filter>src\simulation\SimulationManager\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphicObject.h">
+      <Filter>src\simulation\SimulationManager\Graphics\GraphicObject</Filter>
+    </ClInclude>
+    <ClInclude Include="V2.h">
+      <Filter>src\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="physicsObject.h">
+      <Filter>src\simulation\SimulationManager\Physics\PhysicsState\PhysicsObject</Filter>
+    </ClInclude>
+    <ClInclude Include="simulationManager.h">
+      <Filter>src\simulation\SimulationManager</Filter>
+    </ClInclude>
+    <ClInclude Include="physicsManager.h">
+      <Filter>src\simulation\SimulationManager\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="physicsState.h">
+      <Filter>src\simulation\SimulationManager\Physics\PhysicsState</Filter>
+    </ClInclude>
+    <ClInclude Include="timerManager.h">
+      <Filter>src\simulation\SimulationManager\TimerManager</Filter>
+    </ClInclude>
+    <ClInclude Include="inputManager.h">
+      <Filter>src\simulation\SimulationManager\InputManager</Filter>
+    </ClInclude>
+    <ClInclude Include="simulationState.h">
+      <Filter>src\simulation\SimulationState</Filter>
+    </ClInclude>
+    <ClInclude Include="constraint.h">
+      <Filter>src\simulation\SimulationManager\Physics\Constraints</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
