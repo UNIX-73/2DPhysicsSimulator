@@ -22,9 +22,19 @@ void AngularConstraint::SolveConstraint(double step)
     V2 delta = objB->wPos - objA->wPos;
     V2 relativeOrientation = delta.safeNormal();
     double orientation = relativeOrientation.degAngle();
+    
+    double currentRelAngleA = objA->wAngle - orientation + AAngle;
+    double currentRelAngleB = objB->wAngle - orientation + BAngle;
 
+    double errorA = (currentRelAngleA - relAngleA); //Hay que invertir uno de los 2
+    double errorB = (currentRelAngleB - relAngleA);
+
+    double torqueA = -errorA * stiffness;
+    double torqueB = -errorB * stiffness;
+
+    double dampingA = objA->wAngularVel * -damping;
+    double dampingB = objB->wAngularVel * -damping;
     
-    objA->wAngle = orientation;
-    objB->wAngle = orientation;
-    
+    objA->AddTorque(torqueA + dampingA);
+    objB->AddTorque(torqueB + dampingB);
 }

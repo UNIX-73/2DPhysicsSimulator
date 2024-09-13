@@ -19,7 +19,7 @@ public:
         : wPos(pos), wVel(vel), wAcc(acc),
         wAngle(angle), wAngularVel(angularVel), wAngularAcc(angularAcc),
         currentForce(force), currentTorque(torque),
-        mass(mass), inertia(inertia), simulatePhysics(simulatePhysics)
+        mass(mass), inertia(inertia), simulatePhysics(simulatePhysics), invMass(1.0 / mass), invInertia(1.0 / inertia)
     {
 
     }
@@ -41,6 +41,9 @@ public:
 
     double mass;
     double inertia;
+
+    double invMass;
+    double invInertia;
 
     void AddForce(V2 force, V2 point = V2::ZeroVector);
     void AddTorque(double torque);

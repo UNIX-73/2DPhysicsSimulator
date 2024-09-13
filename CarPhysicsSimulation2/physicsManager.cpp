@@ -53,25 +53,26 @@ void PhysicsManager::Update(double step)
 
 void PhysicsManager::UpdatePhysics(double step)
 {
-	for (std::shared_ptr<PhysicsState>& state : physicsStates)
-	{
-		if (state->simulatePhysics)
-		{
-            state->wAngularAcc = state->currentTorque;
-            state->wAcc = state->currentForce;
+    for (std::shared_ptr<PhysicsState>& state : physicsStates)
+    {
+        if (state->simulatePhysics)
+        {
+            // Realiza la integración con RK4
+            IntegrateRk4(step, state);
 
-			IntegrateRk4(step, state);
-
+            // Restablece las fuerzas y torques después de la integración
             state->currentForce = V2::ZeroVector;
-            state->wAcc = V2::ZeroVector;
-		}
-	}
+            state->currentTorque = 0.0;
+        }
+    }
 
+    // Resuelve los constraints después de actualizar las físicas de los objetos
     for (std::shared_ptr<Constraint> constraint : physicsConstraints)
     {
         constraint->SolveConstraint(step);
     }
 }
+
 
 void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& state)
 {
@@ -81,7 +82,7 @@ void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& st
         };
 
     auto accelerationFunc = [](const PhysicsState& obj) -> V2 {
-        return obj.wAcc;  // Derivada de la velocidad es la aceleración
+        return obj.currentForce * obj.invMass;  // Aceleración es fuerza * masa inversa
         };
 
     // Funciones para calcular las derivadas angulares
@@ -90,7 +91,7 @@ void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& st
         };
 
     auto angularAccelerationFunc = [](const PhysicsState& obj) -> double {
-        return obj.currentTorque / obj.inertia;  // Derivada de la velocidad angular es el torque dividido por la inercia
+        return obj.currentTorque * obj.invInertia;  // Aceleración angular es torque * inercia inversa
         };
 
     // Almacenar el estado inicial
@@ -111,6 +112,10 @@ void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& st
     state->wAngle = initialAngle + k1_angle * 0.5;
     state->wAngularVel = initialAngularVelocity + k1_angularVelocity * 0.5;
 
+    // Recalcula la aceleración lineal y angular con el estado actualizado
+    k1_velocity = accelerationFunc(*state) * step;
+    k1_angularVelocity = angularAccelerationFunc(*state) * step;
+
     V2 k2_position = velocityFunc(*state) * step;
     V2 k2_velocity = accelerationFunc(*state) * step;
     double k2_angle = angularVelocityFunc(*state) * step;
@@ -121,6 +126,10 @@ void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& st
     state->wVel = initialVelocity + k2_velocity * 0.5;
     state->wAngle = initialAngle + k2_angle * 0.5;
     state->wAngularVel = initialAngularVelocity + k2_angularVelocity * 0.5;
+
+    // Recalcula la aceleración lineal y angular con el estado actualizado
+    k2_velocity = accelerationFunc(*state) * step;
+    k2_angularVelocity = angularAccelerationFunc(*state) * step;
 
     V2 k3_position = velocityFunc(*state) * step;
     V2 k3_velocity = accelerationFunc(*state) * step;
@@ -133,6 +142,10 @@ void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& st
     state->wAngle = initialAngle + k3_angle;
     state->wAngularVel = initialAngularVelocity + k3_angularVelocity;
 
+    // Recalcula la aceleración lineal y angular con el estado actualizado
+    k3_velocity = accelerationFunc(*state) * step;
+    k3_angularVelocity = angularAccelerationFunc(*state) * step;
+
     V2 k4_position = velocityFunc(*state) * step;
     V2 k4_velocity = accelerationFunc(*state) * step;
     double k4_angle = angularVelocityFunc(*state) * step;
@@ -144,6 +157,7 @@ void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& st
     state->wAngle = initialAngle + (k1_angle + 2.0 * k2_angle + 2.0 * k3_angle + k4_angle) / 6.0;
     state->wAngularVel = initialAngularVelocity + (k1_angularVelocity + 2.0 * k2_angularVelocity + 2.0 * k3_angularVelocity + k4_angularVelocity) / 6.0;
 }
+
 
 
 void PhysicsManager::UpdatePhysicsObjectGraphics()

@@ -39,11 +39,11 @@ void SimulationState::EventStart()
 
     simulationManager.AddPhysicsObject(c.pObjTest2);
 
-    //std::shared_ptr<SpringConstraint> testConstraint = std::make_shared<SpringConstraint>(Constraint(c.pObjTest, c.pObjTest2), 150.0, 10.0, 2.0);
-    std::shared_ptr<AngularConstraint> angularTestConstraint = std::make_shared<AngularConstraint>(Constraint(c.pObjTest, c.pObjTest2), 1.0, 0.5);
+    std::shared_ptr<SpringConstraint> testConstraint = std::make_shared<SpringConstraint>(Constraint(c.pObjTest, c.pObjTest2), 150.0, 10.0, 2.0);
+    std::shared_ptr<AngularConstraint> angularTestConstraint = std::make_shared<AngularConstraint>(Constraint(c.pObjTest, c.pObjTest2), 1000.0, 80.0);
 
 
-    //simulationManager.AddConstraint(testConstraint);
+    simulationManager.AddConstraint(testConstraint);
     simulationManager.AddConstraint(angularTestConstraint);
 
 
