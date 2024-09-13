@@ -6,12 +6,9 @@ class PhysicsObject : public PhysicsState {
 public:
 	using PhysicsState::PhysicsState;
 	PhysicsObject(std::shared_ptr<GraphicObject>& gObject, PhysicsState state = PhysicsState()) :
-		PhysicsState(state), graphicObject(gObject)
-	{
-
-	}
+		PhysicsState(state), graphicObject(gObject) {};
 
 	std::shared_ptr<GraphicObject> graphicObject;
 
-	void UpdateGraphics();
+	virtual void UpdateGraphics() override;
 };

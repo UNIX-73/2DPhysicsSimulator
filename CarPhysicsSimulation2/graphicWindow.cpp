@@ -7,7 +7,7 @@ GraphicWindow::GraphicWindow(int width, int height) :
     window.create(sf::VideoMode(width, height), "Car Physics Simulator 2");
 
 
-    cameraPos = V2(-width / 2.0, -height / 2.0);
+    cameraPos = V2(-width / 2.0, height / 2.0);
     windowCenter = cameraPos;
 }
 
@@ -54,7 +54,7 @@ void GraphicWindow::SetZoom(double newZoom)
 
 void GraphicWindow::MoveCamera(const V2& addCameraOffset, double step)
 {
-    this->addCameraOffset += addCameraOffset * cameraSpeed * step;
+    this->addCameraOffset += V2(addCameraOffset.x, -addCameraOffset.y) * cameraSpeed * step; //se invierte la y
 }
 
 void GraphicWindow::ChangeZoom(double zoom, double step)
@@ -130,10 +130,10 @@ void GraphicWindow::DrawGraphicObject(std::shared_ptr<GraphicObject> obj)
         float shapeWRotation = rRotation - wRotation;
 
         // Calcular la posición global de la forma
-        V2 diffToObjOrigin = wPos - rPos.rotateVector(-wRotation);
+        V2 diffToObjOrigin = wPos - rPos.rotateVector(wRotation);
         V2 shapeCameraPos = (wPos + diffToObjOrigin - cameraPos) * zoom;
 
-        shape.setPosition(sf::Vector2f(shapeCameraPos.x, shapeCameraPos.y));
+        shape.setPosition(sf::Vector2f(shapeCameraPos.x, -shapeCameraPos.y)); //En gráficos el y está invertido
         shape.setRotation(shapeWRotation);
 
         shape.setScale(zoom, zoom);

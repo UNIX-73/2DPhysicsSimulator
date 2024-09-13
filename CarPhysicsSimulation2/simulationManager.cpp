@@ -93,3 +93,8 @@ void SimulationManager::AddPhysicsObject(std::shared_ptr<PhysicsObject> obj)
 
 	AddGraphicObject(obj->graphicObject);
 }
+
+void SimulationManager::AddConstraint(std::shared_ptr<Constraint> constraint)
+{
+	pManager.AddConstraint(constraint);
+}

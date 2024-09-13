@@ -44,4 +44,6 @@ public:
 
     void AddForce(V2 force, V2 point = V2::ZeroVector);
     void AddTorque(double torque);
+
+    virtual void UpdateGraphics();
 };

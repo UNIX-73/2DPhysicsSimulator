@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="angularConstraint.cpp" />
     <ClCompile Include="constraint.cpp" />
     <ClCompile Include="graphicObject.cpp" />
     <ClCompile Include="graphicWindow.cpp" />
@@ -143,10 +144,12 @@
     <ClCompile Include="physicsState.cpp" />
     <ClCompile Include="simulationManager.cpp" />
     <ClCompile Include="simulationState.cpp" />
+    <ClCompile Include="springConstraint.cpp" />
     <ClCompile Include="timerManager.cpp" />
     <ClCompile Include="V2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="angularConstraint.h" />
     <ClInclude Include="constraint.h" />
     <ClInclude Include="graphicObject.h" />
     <ClInclude Include="graphicWindow.h" />
@@ -157,6 +160,7 @@
     <ClInclude Include="physicsState.h" />
     <ClInclude Include="simulationManager.h" />
     <ClInclude Include="simulationState.h" />
+    <ClInclude Include="springConstraint.h" />
     <ClInclude Include="timerManager.h" />
     <ClInclude Include="V2.h" />
   </ItemGroup>

@@ -7,11 +7,11 @@ public:
 	Constraint(std::shared_ptr<PhysicsState> objA, std::shared_ptr<PhysicsState> objB) :
 		objA(objA), objB(objB) {};
 
-	~Constraint() {};
+	virtual ~Constraint() = default;
 
-	virtual void SolveConstraint();
+	virtual void SolveConstraint(double step);
 
 protected:
 	std::shared_ptr<PhysicsState> objA;
-	std::shared_ptr<PhysicsState> objB;
+	std::shared_ptr<PhysicsState> objB; 
 };

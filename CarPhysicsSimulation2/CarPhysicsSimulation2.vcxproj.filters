@@ -52,6 +52,12 @@
     <Filter Include="src\simulation\SimulationManager\Physics\Constraints">
       <UniqueIdentifier>{73b9bec1-5f48-4a12-b5fd-150921aecd35}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\simulation\SimulationManager\Physics\Constraints\SpringConstraint">
+      <UniqueIdentifier>{ad851ba1-b158-4606-861d-0a3d56ddd780}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\Physics\Constraints\AngularSpringConstraint">
+      <UniqueIdentifier>{092a4081-bcbd-4878-8eb0-5e41819c8090}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -90,6 +96,12 @@
     <ClCompile Include="constraint.cpp">
       <Filter>src\simulation\SimulationManager\Physics\Constraints</Filter>
     </ClCompile>
+    <ClCompile Include="springConstraint.cpp">
+      <Filter>src\simulation\SimulationManager\Physics\Constraints\SpringConstraint</Filter>
+    </ClCompile>
+    <ClCompile Include="angularConstraint.cpp">
+      <Filter>src\simulation\SimulationManager\Physics\Constraints\AngularSpringConstraint</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.h">
@@ -127,6 +139,12 @@
     </ClInclude>
     <ClInclude Include="constraint.h">
       <Filter>src\simulation\SimulationManager\Physics\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="springConstraint.h">
+      <Filter>src\simulation\SimulationManager\Physics\Constraints\SpringConstraint</Filter>
+    </ClInclude>
+    <ClInclude Include="angularConstraint.h">
+      <Filter>src\simulation\SimulationManager\Physics\Constraints\AngularSpringConstraint</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

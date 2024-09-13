@@ -10,6 +10,8 @@ public:
 
 	//DEFINIR VARIABLES DE AQUÍ HACIA ABAJO
 	std::shared_ptr<PhysicsObject> pObjTest;
+	std::shared_ptr<PhysicsObject> pObjTest2;
+
 
 
 

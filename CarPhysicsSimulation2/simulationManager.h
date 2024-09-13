@@ -24,6 +24,10 @@ public:
 	void AddGraphicObject(std::shared_ptr<GraphicObject> obj);
 	void AddPhysicsState(std::shared_ptr<PhysicsState> state);
 	void AddPhysicsObject(std::shared_ptr<PhysicsObject> obj);
+	void AddConstraint(std::shared_ptr<Constraint> constraint);
+
+	//TODO: Funciones de Remove
+	
 
 	TimerManager stepManager;
 	GraphicWindow gWindow;

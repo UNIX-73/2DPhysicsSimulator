@@ -30,6 +30,20 @@ void PhysicsManager::RemovePhysicsObject(std::shared_ptr<PhysicsObject>& pObj)
     RemovePhysicsState(pState);
 }
 
+void PhysicsManager::AddConstraint(std::shared_ptr<Constraint>& constraint)
+{
+    physicsConstraints.push_back(constraint);
+}
+
+void PhysicsManager::RemoveConstraint(std::shared_ptr<Constraint>& constraint)
+{
+    auto it = std::find(physicsConstraints.begin(), physicsConstraints.end(), constraint);
+    if (it != physicsConstraints.end())
+    {
+        physicsConstraints.erase(it);
+    }
+}
+
 void PhysicsManager::Update(double step)
 {
 	UpdatePhysics(step);
@@ -53,13 +67,10 @@ void PhysicsManager::UpdatePhysics(double step)
 		}
 	}
 
-	//TODO: Constraints
-	/*
-	for (std::shared_ptr<PhysicsConstraints>& constraint : physicsConstraints)
-	{
-		
-	}
-	*/
+    for (std::shared_ptr<Constraint> constraint : physicsConstraints)
+    {
+        constraint->SolveConstraint(step);
+    }
 }
 
 void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& state)
@@ -139,10 +150,7 @@ void PhysicsManager::UpdatePhysicsObjectGraphics()
 {
     for (auto& state : physicsStates)
     {
-        // Intentar hacer un dynamic_cast a PhysicsObject
-        if (PhysicsObject* obj = dynamic_cast<PhysicsObject*>(state.get()))
-        {
-            obj->UpdateGraphics();  // Actualiza gráficos solo si es un PhysicsObject
-        }
+        state->UpdateGraphics();  // Actualiza gráficos solo si es un PhysicsObject
     }
 }
+
