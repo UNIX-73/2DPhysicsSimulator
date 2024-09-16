@@ -57,6 +57,8 @@ void PhysicsManager::UpdatePhysics(double step)
     {
         if (state->simulatePhysics)
         {
+            state->SolveCustomForces(step);
+
             // Realiza la integración con RK4
             IntegrateRk4(step, state);
 
@@ -73,6 +75,13 @@ void PhysicsManager::UpdatePhysics(double step)
     }
 }
 
+void PhysicsManager::UpdatePhysicsObjectGraphics()
+{
+    for (auto& state : physicsStates)
+    {
+        state->UpdateGraphics();  // Actualiza gráficos solo si es un PhysicsObject
+    }
+}
 
 void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& state)
 {
@@ -159,12 +168,4 @@ void PhysicsManager::IntegrateRk4(double step, std::shared_ptr<PhysicsState>& st
 }
 
 
-
-void PhysicsManager::UpdatePhysicsObjectGraphics()
-{
-    for (auto& state : physicsStates)
-    {
-        state->UpdateGraphics();  // Actualiza gráficos solo si es un PhysicsObject
-    }
-}
 

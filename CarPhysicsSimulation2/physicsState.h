@@ -1,5 +1,6 @@
 #pragma once
 #include "V2.h"
+#include "customForces.h"
 
 class PhysicsState
 {
@@ -47,6 +48,11 @@ public:
 
     void AddForce(V2 force, V2 point = V2::ZeroVector);
     void AddTorque(double torque);
+
+    void UpdateMass(double mass);
+    void UpdateInertia(double inertia);
+
+    virtual void SolveCustomForces(double step);
 
     virtual void UpdateGraphics();
 };

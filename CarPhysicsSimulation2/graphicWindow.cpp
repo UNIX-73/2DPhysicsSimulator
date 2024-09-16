@@ -131,7 +131,7 @@ void GraphicWindow::DrawGraphicObject(std::shared_ptr<GraphicObject> obj)
 
         // Calcular la posición global de la forma
         V2 diffToObjOrigin = wPos - rPos.rotateVector(wRotation);
-        V2 shapeCameraPos = (wPos + diffToObjOrigin - cameraPos) * zoom;
+        V2 shapeCameraPos = (wPos + diffToObjOrigin - cameraPos) * zoom * 0.5;
 
         shape.setPosition(sf::Vector2f(shapeCameraPos.x, -shapeCameraPos.y)); //En gráficos el y está invertido
         shape.setRotation(shapeWRotation);

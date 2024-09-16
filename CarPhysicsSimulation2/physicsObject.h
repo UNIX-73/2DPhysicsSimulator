@@ -5,10 +5,11 @@
 class PhysicsObject : public PhysicsState {
 public:
 	using PhysicsState::PhysicsState;
-	PhysicsObject(std::shared_ptr<GraphicObject>& gObject, PhysicsState state = PhysicsState()) :
-		PhysicsState(state), graphicObject(gObject) {};
+	PhysicsObject(std::shared_ptr<GraphicObject> gObject, PhysicsState state = PhysicsState(), bool autoInertia = false);
 
 	std::shared_ptr<GraphicObject> graphicObject;
 
 	virtual void UpdateGraphics() override;
+
+	void AutoInertia();
 };

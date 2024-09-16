@@ -25,6 +25,6 @@ void SpringConstraint::SolveConstraint(double step)
     V2 force = (delta / distance) * totalForce;
 
     // Aplica la fuerza a ambos objetos en direcciones opuestas
-    objA->AddForce(-force);
-    objB->AddForce(force);
+    objA->AddForce(-force, anchorPointA);
+    objB->AddForce(force, anchorPointB);
 }

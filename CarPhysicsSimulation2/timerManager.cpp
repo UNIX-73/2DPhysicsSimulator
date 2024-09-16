@@ -3,23 +3,19 @@
 #include <thread>
 
 // Constructor que inicializa los tiempos de step de física y frames por segundo.
-TimerManager::TimerManager(double stepsPerSecond, double fps)
+TimerManager::TimerManager(unsigned int substeps, double fps)
 {
-    // Calculamos la duración de cada step de física usando chrono.
-    stepDuration = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(1.0 / stepsPerSecond));
+    // Calculamos la duración de cada frame (intervalo de tiempo entre frames gráficos).
+    frameDuration = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(1.0 / fps));
+
+    // Calculamos los substeps que ocurren por cada frame.
+    substepsPerFrame = substeps;
 
     // Inicializamos los tiempos de inicio.
     start = std::chrono::high_resolution_clock::now();
     end = std::chrono::high_resolution_clock::now();
     elapsed = std::chrono::nanoseconds(0);
-
-    // Calculamos cuántos steps de física deben ocurrir antes de actualizar el frame.
-    framesPerStep = static_cast<int>(fps / stepsPerSecond);
-    if (framesPerStep <= 0) {
-        framesPerStep = 1;  // Aseguramos al menos un frame por step.
-    }
-
-    stepCount = 0; // Inicializamos el contador de steps.
+    this->fps = fps;
 }
 
 // Método para actualizar el temporizador.
@@ -28,37 +24,62 @@ void TimerManager::UpdateTimer()
     // Calculamos el tiempo actual.
     current = std::chrono::high_resolution_clock::now();
 
-    // Calculamos el tiempo transcurrido desde el último step de física.
+    // Calculamos el tiempo transcurrido desde el último frame.
     elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(current - end);
 
-    // Si ha pasado suficiente tiempo para ejecutar un nuevo step de física.
-    if (elapsed >= stepDuration)
+    // Si ha pasado suficiente tiempo para actualizar el frame.
+    if (elapsed >= frameDuration)
     {
-        // Ajuste del tiempo de 'end' para mayor precisión.
-        end += stepDuration;
+        // Ajustamos el tiempo de 'end' para reflejar el tiempo actual.
+        end += frameDuration;
 
-        // Imprimir el tiempo de desfase corregido (convertimos a duración).
-
-        stepCount++;   // Incrementamos el contador de steps.
-
-        // Ejecutamos la función callback del step de física.
-        if (stepFunction)
+        // Ejecutamos la función gráfica si está configurada.
+        if (graphicFunction)
         {
-            stepFunction();
+            graphicFunction();
         }
 
-        // Si ha alcanzado el número de steps necesarios para mostrar un nuevo frame.
-        if (stepCount >= framesPerStep)
+        // Medir el tiempo antes de ejecutar los substeps de física.
+        auto physicsStart = std::chrono::high_resolution_clock::now();
+
+        // Ejecutamos la función de substeps (steps de física).
+        if (stepFunction)
         {
-            stepCount = 0;
-            
-            if (graphicFunction)
+            for (int i = 0; i < substepsPerFrame; i++)  // Ejecutamos los substeps.
             {
-                graphicFunction();
+                stepFunction();
             }
+        }
+
+        // Medir el tiempo después de ejecutar los substeps de física.
+        auto physicsEnd = std::chrono::high_resolution_clock::now();
+
+        // Calcular el tiempo que tomó la simulación física en este frame.
+        auto physicsFrameTime = std::chrono::duration_cast<std::chrono::nanoseconds>(physicsEnd - physicsStart);
+
+        // Acumulamos el tiempo total de la física durante este frame.
+        physicsDuration += physicsFrameTime;
+
+        // Acumulamos el tiempo total transcurrido.
+        totalElapsedTime += frameDuration;
+
+        // Verificamos si ha pasado un segundo (1e9 nanosegundos).
+        if (totalElapsedTime >= std::chrono::nanoseconds(1000000000))
+        {
+            // Calculamos el porcentaje de tiempo que tomó la física durante este segundo.
+            double physicsTimePercentage = (static_cast<double>(physicsDuration.count()) / totalElapsedTime.count()) * 100.0;
+
+            // Printeamos el porcentaje de tiempo dedicado a la simulación física.
+            std::cout << "Physics Time: " << physicsTimePercentage << "%" << std::endl;
+
+            // Reseteamos los acumuladores.
+            totalElapsedTime = std::chrono::nanoseconds(0);
+            physicsDuration = std::chrono::nanoseconds(0);
         }
     }
 }
+
+
 
 // Método para registrar una función de callback para los steps de física.
 void TimerManager::SetStepFunction(const std::function<void()>& stepFunction)

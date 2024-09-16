@@ -11,6 +11,8 @@ public:
 
 	virtual void SolveConstraint(double step);
 
+	bool rk4Constraint = false;
+
 protected:
 	std::shared_ptr<PhysicsState> objA;
 	std::shared_ptr<PhysicsState> objB; 

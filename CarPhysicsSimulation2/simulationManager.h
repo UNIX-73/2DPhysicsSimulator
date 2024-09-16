@@ -7,7 +7,7 @@
 class SimulationManager
 {
 public:
-	SimulationManager(bool* RUN, int windowWidth, int windowHeight, double stepsPerSecond, double fps, sf::Color backgroundColor = sf::Color(181, 181, 181));
+	SimulationManager(bool* RUN, int windowWidth, int windowHeight, unsigned int substepsPerFrame, double fps, sf::Color backgroundColor = sf::Color(181, 181, 181));
 	~SimulationManager();
 
 	void Update(); //La idea es que está en el while principal

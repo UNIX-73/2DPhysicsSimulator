@@ -1,12 +1,12 @@
 #include "simulationManager.h"
 
-SimulationManager::SimulationManager(bool* RUN, int windowWidth, int windowHeight, double stepsPerSecond, double fps, sf::Color backgroundColor) :
-	RUN(RUN), gWindow(windowWidth, windowHeight), pManager(PhysicsManager()), stepManager(stepsPerSecond, fps), iManager(RUN, this->gWindow, this->pManager), backgroundColor(backgroundColor)
+SimulationManager::SimulationManager(bool* RUN, int windowWidth, int windowHeight, unsigned int substepsPerFrame, double fps, sf::Color backgroundColor) :
+	RUN(RUN), gWindow(windowWidth, windowHeight), pManager(PhysicsManager()), stepManager(substepsPerFrame, fps), iManager(RUN, this->gWindow, this->pManager), backgroundColor(backgroundColor)
 {
 	stepManager.SetStepFunction(std::bind(&SimulationManager::UpdateSimulation, this));
 	stepManager.SetGraphicFunction(std::bind(&SimulationManager::UpdateGraphics, this));
 	
-	step = 1.0 / stepsPerSecond;
+	step = (1.0 / fps) / static_cast<double>(substepsPerFrame);
 }
 
 SimulationManager::~SimulationManager()
