@@ -1,4 +1,5 @@
 #include "physicsManager.h"
+#include "constraintSolver.h"
 
 PhysicsManager::PhysicsManager() {
 
@@ -44,6 +45,7 @@ void PhysicsManager::RemoveConstraint(std::shared_ptr<Constraint>& constraint)
     }
 }
 
+
 void PhysicsManager::Update(double step)
 {
 	UpdatePhysics(step);
@@ -69,10 +71,10 @@ void PhysicsManager::UpdatePhysics(double step)
     }
 
     // Resuelve los constraints después de actualizar las físicas de los objetos
-    for (std::shared_ptr<Constraint> constraint : physicsConstraints)
-    {
-        constraint->SolveConstraint(step);
-    }
+    
+    //TODO: constraints
+
+
 }
 
 void PhysicsManager::UpdatePhysicsObjectGraphics()

@@ -133,46 +133,42 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="angularConstraint.cpp" />
     <ClCompile Include="carBuilder.cpp" />
     <ClCompile Include="constraint.cpp" />
+    <ClCompile Include="constraintSolver.cpp" />
     <ClCompile Include="customForces.cpp" />
     <ClCompile Include="graphicObject.cpp" />
     <ClCompile Include="graphicWindow.cpp" />
     <ClCompile Include="inputManager.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="matrix.cpp" />
     <ClCompile Include="physicsManager.cpp" />
     <ClCompile Include="physicsObject.cpp" />
     <ClCompile Include="physicsState.cpp" />
     <ClCompile Include="physicsTyre.cpp" />
-    <ClCompile Include="rigidAngularConstraint.cpp" />
     <ClCompile Include="rigidConstraint.cpp" />
     <ClCompile Include="simulationManager.cpp" />
     <ClCompile Include="simulationState.cpp" />
-    <ClCompile Include="softConstraint.cpp" />
-    <ClCompile Include="springConstraint.cpp" />
     <ClCompile Include="timerManager.cpp" />
     <ClCompile Include="V2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="angularConstraint.h" />
     <ClInclude Include="carBuilder.h" />
     <ClInclude Include="constraint.h" />
+    <ClInclude Include="constraintSolver.h" />
     <ClInclude Include="customForces.h" />
     <ClInclude Include="graphicObject.h" />
     <ClInclude Include="graphicWindow.h" />
     <ClInclude Include="inputManager.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="matrix.h" />
     <ClInclude Include="physicsManager.h" />
     <ClInclude Include="physicsObject.h" />
     <ClInclude Include="physicsState.h" />
     <ClInclude Include="physicsTyre.h" />
-    <ClInclude Include="rigidAngularConstraint.h" />
     <ClInclude Include="rigidConstraint.h" />
     <ClInclude Include="simulationManager.h" />
     <ClInclude Include="simulationState.h" />
-    <ClInclude Include="softConstraint.h" />
-    <ClInclude Include="springConstraint.h" />
     <ClInclude Include="timerManager.h" />
     <ClInclude Include="V2.h" />
   </ItemGroup>

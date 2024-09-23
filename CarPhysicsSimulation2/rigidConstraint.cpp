@@ -1,32 +1,46 @@
 #include "rigidConstraint.h"
 
-void RigidConstraint::SolveConstraint(double step)
+ConstraintResult& RigidConstraint::SolveConstraint(double step)
 {
+    ConstraintResult result;
 
-	V2 delta = objB->wPos - objA->wPos;
+    // Posiciones y ángulos actuales de objA y objB
+    V2 posA = objA->wPos;
+    V2 posB = objB->wPos;
+    double angleA = objA->wAngle;
+    double angleB = objB->wAngle;
 
-	if (delta == V2::ZeroVector) return;
+    // Diferencias de posición y ángulo
+    V2 deltaPos = posB - posA;
+    double deltaAngle = angleB - angleA;
 
-	double currentDistance = delta.size();
+    // Velocidades lineales y angulares
+    V2 velA = objA->wVel;
+    V2 velB = objB->wVel;
+    double angularVelA = objA->wAngularVel;
+    double angularVelB = objB->wAngularVel;
 
-	double C = currentDistance - restLength;
+    // Jacobiana (J): Restringimos las diferencias de movimiento lineal y angular
+    result.JxA = -1.0; // A debería moverse en la dirección opuesta de B
+    result.JxB = 1.0;
+    result.JyA = -1.0;
+    result.JyB = 1.0;
+    result.JØA = -1.0;
+    result.JØB = 1.0;
 
-	//Jacobiano
-	V2 j1 = delta.safeNormal();
-	V2 j2 = -j1;
+    // Fuerzas de reacción (Q): Estas fuerzas intentan reducir el error (delta)
+    result.QxA = deltaPos.x / step; // Dividir el error por el paso de tiempo
+    result.QxB = -deltaPos.x / step;
+    result.QyA = deltaPos.y / step;
+    result.QyB = -deltaPos.y / step;
+    result.QØA = deltaAngle / step;
+    result.QØB = -deltaAngle / step;
 
-	V2 rVel = objB->wVel - objA->wVel;
+    // Indicamos que hay restricciones en los 3 grados de libertad (x, y, Ø)
+    result.constraintsX = true;
+    result.constraintsY = true;
+    result.constraintsØ = true;
 
-	double lambda = -(rVel.dot(j1) + C * (1.0 / step)) / (objA->invMass + objB->invMass);
-
-	//Damping
-	V2 dampingForce;
-
-	if (damping != 0.0)
-	{
-		dampingForce = damping * lambda * j1;
-	}
-
-	objA->AddForce(-j1 * lambda - dampingForce);
-	objB->AddForce(-j2 * lambda + dampingForce);
+    return result;
 }
+

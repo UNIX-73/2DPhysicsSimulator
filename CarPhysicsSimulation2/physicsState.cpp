@@ -33,7 +33,7 @@ void PhysicsState::UpdateMass(double mass)
 
 void PhysicsState::UpdateInertia(double inertia)
 {
-	this->inertia;
+	this->inertia = inertia;
 	invInertia = 1.0 / this->inertia;
 }
 

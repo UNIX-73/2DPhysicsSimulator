@@ -7,7 +7,7 @@
 
 int main()
 {
-    SimulationManager simulationManager(&RUN, 900, 900, 50, 240);
+    SimulationManager simulationManager(&RUN, 900, 900, 300, 240);
 
     SimulationState simulationState(simulationManager); //Aquí se escribe el código
     

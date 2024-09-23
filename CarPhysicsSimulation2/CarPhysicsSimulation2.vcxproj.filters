@@ -52,15 +52,6 @@
     <Filter Include="src\simulation\SimulationManager\Physics\Constraints">
       <UniqueIdentifier>{73b9bec1-5f48-4a12-b5fd-150921aecd35}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\simulation\SimulationManager\Physics\Constraints\SpringConstraint">
-      <UniqueIdentifier>{ad851ba1-b158-4606-861d-0a3d56ddd780}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\simulation\SimulationManager\Physics\Constraints\AngularSpringConstraint">
-      <UniqueIdentifier>{092a4081-bcbd-4878-8eb0-5e41819c8090}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\simulation\SimulationManager\Physics\Constraints\SoftConstraint">
-      <UniqueIdentifier>{7e19059a-c42d-4ee7-97c9-c303f12b1671}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\simulation\Objects">
       <UniqueIdentifier>{4ab97c3e-4576-4442-9699-2e9a8cad2cea}</UniqueIdentifier>
     </Filter>
@@ -70,11 +61,17 @@
     <Filter Include="src\simulation\SimulationManager\Physics\PhysicsState\CustomForces">
       <UniqueIdentifier>{2332e851-91f5-497a-b7c7-304bd63c4cde}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\simulation\SimulationManager\Physics\Constraints\RigidConstraint">
-      <UniqueIdentifier>{fd724d72-4965-4deb-ac48-7be1304f9b00}</UniqueIdentifier>
+    <Filter Include="src\Utils\V2">
+      <UniqueIdentifier>{dcbe280f-d453-404b-8d08-7fafeae6ea69}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\simulation\SimulationManager\Physics\Constraints\RigidAngularConstraint">
-      <UniqueIdentifier>{fbcbf0d5-df82-42c2-9cf3-0d1444cb419a}</UniqueIdentifier>
+    <Filter Include="src\Utils\Matrix">
+      <UniqueIdentifier>{92c58ce1-2764-45f9-bdb7-18088891f14b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\Physics\Constraints\ConstraintSolver">
+      <UniqueIdentifier>{974d7a5d-22e0-4b21-8b76-1dda9da0d130}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\simulation\SimulationManager\Physics\Constraints\RigidConstraint">
+      <UniqueIdentifier>{21f9c29f-6570-470d-8aa1-1eb7f087580f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -83,9 +80,6 @@
     </ClCompile>
     <ClCompile Include="graphicWindow.cpp">
       <Filter>src\simulation\SimulationManager\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="V2.cpp">
-      <Filter>src\Utils</Filter>
     </ClCompile>
     <ClCompile Include="graphicObject.cpp">
       <Filter>src\simulation\SimulationManager\Graphics\GraphicObject</Filter>
@@ -114,15 +108,6 @@
     <ClCompile Include="constraint.cpp">
       <Filter>src\simulation\SimulationManager\Physics\Constraints</Filter>
     </ClCompile>
-    <ClCompile Include="springConstraint.cpp">
-      <Filter>src\simulation\SimulationManager\Physics\Constraints\SpringConstraint</Filter>
-    </ClCompile>
-    <ClCompile Include="angularConstraint.cpp">
-      <Filter>src\simulation\SimulationManager\Physics\Constraints\AngularSpringConstraint</Filter>
-    </ClCompile>
-    <ClCompile Include="softConstraint.cpp">
-      <Filter>src\simulation\SimulationManager\Physics\Constraints\SoftConstraint</Filter>
-    </ClCompile>
     <ClCompile Include="carBuilder.cpp">
       <Filter>src\simulation\Objects</Filter>
     </ClCompile>
@@ -132,11 +117,17 @@
     <ClCompile Include="physicsTyre.cpp">
       <Filter>src\simulation\Objects\PhysicsTyre</Filter>
     </ClCompile>
+    <ClCompile Include="V2.cpp">
+      <Filter>src\Utils\V2</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix.cpp">
+      <Filter>src\Utils\Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="constraintSolver.cpp">
+      <Filter>src\simulation\SimulationManager\Physics\Constraints\ConstraintSolver</Filter>
+    </ClCompile>
     <ClCompile Include="rigidConstraint.cpp">
       <Filter>src\simulation\SimulationManager\Physics\Constraints\RigidConstraint</Filter>
-    </ClCompile>
-    <ClCompile Include="rigidAngularConstraint.cpp">
-      <Filter>src\simulation\SimulationManager\Physics\Constraints\RigidAngularConstraint</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -148,9 +139,6 @@
     </ClInclude>
     <ClInclude Include="graphicObject.h">
       <Filter>src\simulation\SimulationManager\Graphics\GraphicObject</Filter>
-    </ClInclude>
-    <ClInclude Include="V2.h">
-      <Filter>src\Utils</Filter>
     </ClInclude>
     <ClInclude Include="physicsObject.h">
       <Filter>src\simulation\SimulationManager\Physics\PhysicsState\PhysicsObject</Filter>
@@ -176,15 +164,6 @@
     <ClInclude Include="constraint.h">
       <Filter>src\simulation\SimulationManager\Physics\Constraints</Filter>
     </ClInclude>
-    <ClInclude Include="springConstraint.h">
-      <Filter>src\simulation\SimulationManager\Physics\Constraints\SpringConstraint</Filter>
-    </ClInclude>
-    <ClInclude Include="angularConstraint.h">
-      <Filter>src\simulation\SimulationManager\Physics\Constraints\AngularSpringConstraint</Filter>
-    </ClInclude>
-    <ClInclude Include="softConstraint.h">
-      <Filter>src\simulation\SimulationManager\Physics\Constraints\SoftConstraint</Filter>
-    </ClInclude>
     <ClInclude Include="carBuilder.h">
       <Filter>src\simulation\Objects</Filter>
     </ClInclude>
@@ -194,11 +173,17 @@
     <ClInclude Include="physicsTyre.h">
       <Filter>src\simulation\Objects\PhysicsTyre</Filter>
     </ClInclude>
+    <ClInclude Include="V2.h">
+      <Filter>src\Utils\V2</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>src\Utils\Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="constraintSolver.h">
+      <Filter>src\simulation\SimulationManager\Physics\Constraints\ConstraintSolver</Filter>
+    </ClInclude>
     <ClInclude Include="rigidConstraint.h">
       <Filter>src\simulation\SimulationManager\Physics\Constraints\RigidConstraint</Filter>
-    </ClInclude>
-    <ClInclude Include="rigidAngularConstraint.h">
-      <Filter>src\simulation\SimulationManager\Physics\Constraints\RigidAngularConstraint</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

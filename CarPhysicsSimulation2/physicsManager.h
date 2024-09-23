@@ -23,6 +23,7 @@ public:
 	void IntegrateRk4(double step, std::shared_ptr<PhysicsState>& state);
 	void UpdatePhysicsObjectGraphics();
 
+
 private:
 	std::vector<std::shared_ptr<PhysicsState>> physicsStates;
 	std::vector<std::shared_ptr<Constraint>> physicsConstraints;
