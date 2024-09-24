@@ -98,3 +98,8 @@ void SimulationManager::AddConstraint(std::shared_ptr<Constraint> constraint)
 {
 	pManager.AddConstraint(constraint);
 }
+
+void SimulationManager::Stop()
+{
+	*RUN = false;
+}

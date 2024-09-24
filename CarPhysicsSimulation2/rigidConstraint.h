@@ -5,11 +5,14 @@ class RigidConstraint : public Constraint {
 
 public:
 
-	RigidConstraint(Constraint constrainedObj) :
-		Constraint(constrainedObj) {};
+	RigidConstraint(Constraint constrainedObj);
 
 	virtual ConstraintResult& SolveConstraint(double step) override;
 
 
+private:
 
+	V2 delta;
+	double deltaAngle;
+	double restLength;
 };

@@ -26,6 +26,8 @@ public:
 	void AddPhysicsObject(std::shared_ptr<PhysicsObject> obj);
 	void AddConstraint(std::shared_ptr<Constraint> constraint);
 
+	void Stop();
+
 	//TODO: Funciones de Remove
 	
 

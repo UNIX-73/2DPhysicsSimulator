@@ -3,6 +3,7 @@
 #include "constraint.h"
 #include <vector>
 #include <memory>
+#include "constraintSolver.h"
 
 class PhysicsManager
 {
@@ -23,8 +24,8 @@ public:
 	void IntegrateRk4(double step, std::shared_ptr<PhysicsState>& state);
 	void UpdatePhysicsObjectGraphics();
 
-
+	ConstraintSolver constraintSolver;
 private:
+
 	std::vector<std::shared_ptr<PhysicsState>> physicsStates;
-	std::vector<std::shared_ptr<Constraint>> physicsConstraints;
 };

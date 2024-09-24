@@ -17,6 +17,8 @@ public:
 
 	std::shared_ptr<CarBuilder> car;
 
+	int steps = 0;
+
 
 	//_____________________________________
 };

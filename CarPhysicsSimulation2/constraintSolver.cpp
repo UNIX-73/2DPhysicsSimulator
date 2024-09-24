@@ -1,14 +1,36 @@
-#include "constraintSolver.h"
+ï»¿#include "constraintSolver.h"
 
 #include <string>
 
-void ConstraintSolver::SolveConstraints()
+ConstraintSolver::ConstraintSolver()
+{
+    UpdateMatrixVariables();
+}
+
+void ConstraintSolver::AddConstraint(std::shared_ptr<Constraint>& constraint)
+{
+    constraints.push_back(constraint);
+
+    UpdateMatrixVariables();
+}
+
+void ConstraintSolver::RemoveConstraint(std::shared_ptr<Constraint>& constraint)
+{
+    constraints.erase(
+        std::remove(constraints.begin(), constraints.end(), constraint),
+        constraints.end()
+    );
+
+    UpdateMatrixVariables();
+}
+
+void ConstraintSolver::SolveConstraints(double step)
 {
     StateIndexes();
-    CreateW();
-    CreateJacobianAndQ();
     Create_q_dot();
-
+    CreateJacobianAndQ(step);
+    CreateW();
+    
     //  Left
     Matrix JWJT = J * W * J.transpose();
 
@@ -18,23 +40,35 @@ void ConstraintSolver::SolveConstraints()
 
     Matrix _Jq_JWQ = -Jq - JWQ;
 
-    Matrix result(_Jq_JWQ.getRows(), size_t(1));
+    //Result
+    Matrix lambda(_Jq_JWQ.getRows(), size_t(1));
 
+    CholeskySolver(JWJT, _Jq_JWQ, &lambda);
 
-    Matrix A = Matrix({ {4.0, 2.0},
-                        {2.0, 3.0} });
+    std::cout << "J" << std::endl;
+    J.print();
 
-    std::vector<std::vector<double>> bVector{ { 10.0 }, { 11.0 } };
+    std::cout << "JWJT" << std::endl;
+    JWJT.print();
 
-    Matrix B = Matrix(bVector);
+    std::cout << "_Jq_JWQ" << std::endl;
 
+    _Jq_JWQ.print();
 
-    CholeskySolver(A, B, &result);
+    std::cout << "lambda" << std::endl;
+    lambda.print();
 
-    result.print();
+    Matrix JT = J.transpose() * lambda;
+
+    std::cout << "JT * lambda" << std::endl;
+    JT.print();
+
+    std::cout << "-------------" << std::endl;
+
+    ApplyConstraintForces(lambda);
 }
 
-void ConstraintSolver::CholeskySolver(const Matrix& A, const Matrix& B, Matrix* result)
+void ConstraintSolver::CholeskySolver(const Matrix& A, const Matrix& B, Matrix* lambda)
 {
     // Verificamos que A sea cuadrada y que B tenga dimensiones compatibles.
     if (A.getRows() != A.getCols()) {
@@ -43,10 +77,10 @@ void ConstraintSolver::CholeskySolver(const Matrix& A, const Matrix& B, Matrix* 
 
     int n = A.getRows();
 
-    // Inicializar la matriz L como triangular inferior de tamaño nxn
+    // Inicializar la matriz L como triangular inferior de tamaÃ±o nxn
     Matrix L(n, n);
 
-    // Descomposición de Cholesky para obtener L
+    // DescomposiciÃ³n de Cholesky para obtener L
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j <= i; ++j) {
             double sum = 0.0;
@@ -66,7 +100,7 @@ void ConstraintSolver::CholeskySolver(const Matrix& A, const Matrix& B, Matrix* 
         }
     }
 
-    // Ahora resolvemos el sistema Ly = B mediante sustitución hacia adelante
+    // Ahora resolvemos el sistema Ly = B mediante sustituciÃ³n hacia adelante
     Matrix y(n, B.getCols());
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < B.getCols(); ++j) {
@@ -78,8 +112,8 @@ void ConstraintSolver::CholeskySolver(const Matrix& A, const Matrix& B, Matrix* 
         }
     }
 
-    // Luego resolvemos L^T x = y mediante sustitución hacia atrás
-    Matrix& x = *result;
+    // Luego resolvemos L^T x = y mediante sustituciÃ³n hacia atrÃ¡s
+    Matrix& x = *lambda;
     x.resize(n, B.getCols());
 
     for (int i = n - 1; i >= 0; --i) {
@@ -92,6 +126,49 @@ void ConstraintSolver::CholeskySolver(const Matrix& A, const Matrix& B, Matrix* 
         }
     }
 }
+
+void ConstraintSolver::ApplyConstraintForces(const Matrix& lambda)
+{
+    if (lambda.getCols() > 1)
+    {
+        std::cout << "La matriz lambda tiene mÃ¡s de 1 columna, error" << std::endl;
+        return;
+    }
+
+    Matrix forces = J.transpose() * lambda;
+
+    int numStates = static_cast<int>(statesIndex.size());
+
+    for (int i = 0; i < numStates; ++i)
+    {
+        // Obtener el estado actual
+        auto& state = statesIndex[i];
+
+        // Aplicar fuerzas y torques
+        for (int axis = 0; axis < 3; ++axis)
+        {
+            switch (axis)
+            {
+            case 0: // Fuerza en X
+                std::get<1>(state)->AddForce(V2(forces(i * 3 + axis, 0), 0.0));
+                break;
+
+            case 1: // Fuerza en Y
+                std::get<1>(state)->AddForce(V2(0.0, forces(i * 3 + axis, 0)));
+                break;
+
+            case 2: // Torque
+                std::get<1>(state)->AddTorque(forces(i * 3 + axis, 0));
+                break;
+
+            default:
+                std::cout << "Switch en ApplyConstraintForces fuera de Ã­ndice" << std::endl;
+                break;
+            }
+        }
+    }
+}
+
 
 
 void ConstraintSolver::PrintW()
@@ -127,38 +204,38 @@ void ConstraintSolver::StateIndexes()
         std::shared_ptr<PhysicsState> objA = constraint->GetObjA();
         std::shared_ptr<PhysicsState> objB = constraint->GetObjB();
 
-        // Función lambda para buscar un objeto en el vector physicsIndex
+        // FunciÃ³n lambda para buscar un objeto en el vector physicsIndex
         auto objectExistsInIndex = [&](std::shared_ptr<PhysicsState> obj) -> bool {
             for (const auto& entry : statesIndex) {
                 if (std::get<1>(entry) == obj) {
-                    return true; // El objeto ya está en el índice
+                    return true; // El objeto ya estÃ¡ en el Ã­ndice
                 }
             }
-            return false; // El objeto no está en el índice
+            return false; // El objeto no estÃ¡ en el Ã­ndice
             };
 
-        // Si objA no está, añadirlo
+        // Si objA no estÃ¡, aÃ±adirlo
         if (!objectExistsInIndex(objA)) {
             statesIndex.push_back(std::make_tuple(i++, objA));
         }
 
-        // Si objB no está, añadirlo
+        // Si objB no estÃ¡, aÃ±adirlo
         if (!objectExistsInIndex(objB)) {
             statesIndex.push_back(std::make_tuple(i++, objB));
         }
     }
 
 
-    //Establecer tamaño de las matrices
+    //Establecer tamaÃ±o de las matrices
     
     if (!statesIndex.empty())
     {
-        size_t numStates = statesIndex.size(); // Número total de estados (objetos)
-        size_t wSize = numStates * 3; // Cada estado tiene 3 grados de libertad (x, y, Ø)
+        size_t numStates = statesIndex.size(); // NÃºmero total de estados (objetos)
+        size_t wSize = numStates * 3; // Cada estado tiene 3 grados de libertad (x, y, Ã˜)
 
         W = Matrix(wSize, wSize); // Inicializar la matriz W como wSize x wSize
         Q = Matrix(wSize, 1);
-        J = Matrix(0, wSize); //se añaden luego las rows
+        J = Matrix(0, wSize); //se aÃ±aden luego las rows
         q_dot = Matrix(wSize, 1);
     }
  
@@ -172,9 +249,16 @@ int ConstraintSolver::GetStateIdx(std::shared_ptr<PhysicsState> state)
         if (std::get<1>(stateIdx) == state) return std::get<0>(stateIdx);
     }
 
-    std::cout << "No se encontró el state, parece haber un error en el sistema de constraintSolver" << std::endl;
+    std::cout << "No se encontrÃ³ el state, parece haber un error en el sistema de constraintSolver" << std::endl;
 
     return 0;
+}
+
+void ConstraintSolver::UpdateMatrixVariables()
+{
+    StateIndexes();
+    CreateW();
+    Create_q_dot();
 }
 
 void ConstraintSolver::CreateW()
@@ -183,11 +267,11 @@ void ConstraintSolver::CreateW()
 
     if (!statesIndex.empty())
     {
-        maxCols = (std::get<0>(statesIndex.back()) + 1) * 3; // * 3 porque hay 3 grados de movimiento (x, y, Ø), +1 porque empieza por 0
+        maxCols = (std::get<0>(statesIndex.back()) + 1) * 3; // * 3 porque hay 3 grados de movimiento (x, y, Ã˜), +1 porque empieza por 0
     }
     else
     {
-        std::cout << "No hay constraints añadidos" << std::endl;
+        std::cout << "No hay constraints aÃ±adidos" << std::endl;
         return;
     }
 
@@ -199,15 +283,15 @@ void ConstraintSolver::CreateW()
 
         std::vector<double> rowX(maxCols, 0.0);
         std::vector<double> rowY(maxCols, 0.0);
-        std::vector<double> rowØ(maxCols, 0.0);
+        std::vector<double> rowÃ˜(maxCols, 0.0);
 
         rowX[i * 3] = std::get<1>(state)->invMass;
         rowY[i * 3 + 1] = std::get<1>(state)->invMass;
-        rowØ[i * 3 + 2] = std::get<1>(state)->invInertia;
+        rowÃ˜[i * 3 + 2] = std::get<1>(state)->invInertia;
 
         W.SetRow(currentRow++, rowX);
         W.SetRow(currentRow++, rowY);
-        W.SetRow(currentRow++, rowØ);
+        W.SetRow(currentRow++, rowÃ˜);
     }
 }
 
@@ -225,7 +309,7 @@ void ConstraintSolver::Create_q_dot()
 
 
 
-void ConstraintSolver::CreateJacobianAndQ()
+void ConstraintSolver::CreateJacobianAndQ(double step)
 {
     if (constraints.empty()) return;
 
@@ -241,55 +325,40 @@ void ConstraintSolver::CreateJacobianAndQ()
 
         ConstraintResult res = constraint->SolveConstraint(step);
 
-        // Q
-        if (res.constraintsX)
+        // Q y J para X
+        if (res.constraintsX && (res.JxA != 0.0 || res.JxB != 0.0) && (res.QxA != 0.0 || res.QxB != 0.0))
         {
             Q.AddValue(idxA * 3, 0, res.QxA);
             Q.AddValue(idxB * 3, 0, res.QxB);
+
+            std::vector<double> xRow(wSize, 0.0);
+            xRow[idxA * 3] = res.JxA;
+            xRow[idxB * 3] = res.JxB;
+            J.PushRowBack(xRow);
         }
-        
-        if (res.constraintsY)
+
+        // Q y J para Y
+        if (res.constraintsY && (res.JyA != 0.0 || res.JyB != 0.0) && (res.QyA != 0.0 || res.QyB != 0.0))
         {
             Q.AddValue(idxA * 3 + 1, 0, res.QyA);
             Q.AddValue(idxB * 3 + 1, 0, res.QyB);
-        }
 
-        if (res.constraintsØ)
-        {
-            Q.AddValue(idxA * 3 + 2, 0, res.QØA);
-            Q.AddValue(idxB * 3 + 2, 0, res.QØB);
-
-            std::cout << std::to_string(res.QØB) << std::endl;
-        }
-
-
-        // J
-        if (res.constraintsX)
-        {
-            std::vector<double> xRow(wSize, 0.0);
-
-            xRow[idxA * 3] = res.JxA;
-            xRow[idxB * 3] = res.JxB;
-
-            J.PushRowBack(xRow);
-        }
-        if (res.constraintsY)
-        {
             std::vector<double> yRow(wSize, 0.0);
-            
             yRow[idxA * 3 + 1] = res.JyA;
             yRow[idxB * 3 + 1] = res.JyB;
-
             J.PushRowBack(yRow);
         }
-        if (res.constraintsØ)
+
+        // Q y J para Ã˜ (rotaciÃ³n)
+        if (res.constraintsÃ˜ && (res.JÃ˜A != 0.0 || res.JÃ˜B != 0.0) && (res.QÃ˜A != 0.0 || res.QÃ˜B != 0.0))
         {
-            std::vector<double> ØRow(wSize, 0.0);
+            Q.AddValue(idxA * 3 + 2, 0, res.QÃ˜A);
+            Q.AddValue(idxB * 3 + 2, 0, res.QÃ˜B);
 
-            ØRow[idxA * 3 + 2] = res.JØA;
-            ØRow[idxB * 3 + 2] = res.JØB;
-
-            J.PushRowBack(ØRow);
+            std::vector<double> Ã˜Row(wSize, 0.0);
+            Ã˜Row[idxA * 3 + 2] = res.JÃ˜A;
+            Ã˜Row[idxB * 3 + 2] = res.JÃ˜B;
+            J.PushRowBack(Ã˜Row);
         }
     }
 }

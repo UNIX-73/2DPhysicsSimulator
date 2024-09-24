@@ -7,9 +7,9 @@
 
 int main()
 {
-    SimulationManager simulationManager(&RUN, 900, 900, 300, 240);
+    SimulationManager simulationManager(&RUN, 900, 900, 5, 240);
 
-    SimulationState simulationState(simulationManager); //Aquí se escribe el código
+    SimulationState simulationState(simulationManager); //Aquí se escribe el código (pasa callbacks desde el manager)
     
     while (RUN)
     {

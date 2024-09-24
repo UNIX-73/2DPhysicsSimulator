@@ -1,7 +1,9 @@
 #include "physicsManager.h"
 #include "constraintSolver.h"
 
-PhysicsManager::PhysicsManager() {
+PhysicsManager::PhysicsManager() :
+    constraintSolver(ConstraintSolver()) 
+{
 
 }
 
@@ -33,16 +35,12 @@ void PhysicsManager::RemovePhysicsObject(std::shared_ptr<PhysicsObject>& pObj)
 
 void PhysicsManager::AddConstraint(std::shared_ptr<Constraint>& constraint)
 {
-    physicsConstraints.push_back(constraint);
+    constraintSolver.AddConstraint(constraint);
 }
 
 void PhysicsManager::RemoveConstraint(std::shared_ptr<Constraint>& constraint)
 {
-    auto it = std::find(physicsConstraints.begin(), physicsConstraints.end(), constraint);
-    if (it != physicsConstraints.end())
-    {
-        physicsConstraints.erase(it);
-    }
+    constraintSolver.RemoveConstraint(constraint);
 }
 
 
@@ -70,11 +68,7 @@ void PhysicsManager::UpdatePhysics(double step)
         }
     }
 
-    // Resuelve los constraints después de actualizar las físicas de los objetos
-    
-    //TODO: constraints
-
-
+    constraintSolver.SolveConstraints(step);
 }
 
 void PhysicsManager::UpdatePhysicsObjectGraphics()

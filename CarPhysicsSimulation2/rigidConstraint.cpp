@@ -1,46 +1,92 @@
 #include "rigidConstraint.h"
 
+RigidConstraint::RigidConstraint(Constraint constrainedObj) :
+    Constraint(constrainedObj) 
+{
+    delta = objB->wPos - objA->wPos;
+    deltaAngle = delta.degAngle();
+    restLength = delta.size();
+}
+
 ConstraintResult& RigidConstraint::SolveConstraint(double step)
 {
+    // Calcular la posición actual delta y la distancia
+    V2 deltaPos = objB->wPos - objA->wPos;
+
+    // Si la diferencia de posición es cero, no hay constraints que resolver
+    if (deltaPos == V2::ZeroVector)
+    {
+        ConstraintResult result;
+        result.constraintsX = true;
+        result.constraintsY = true;
+        result.constraintsØ = false;
+
+        result.JxA = 0.0;
+        result.JyA = 0.0;
+        result.JxB = 0.0;
+        result.JyB = 0.0;
+
+        result.QxA = 0.0;
+        result.QyA = 0.0;
+        result.QxB = 0.0;
+        result.QyB = 0.0;
+
+        return result;
+    }
+
+    // Calcular la distancia actual entre los objetos
+    double currentDistance = deltaPos.size();
+
+    // Normalizar deltaPos para obtener el Jacobiano (dirección del constraint)
+    V2 j = deltaPos.safeNormal();
+
+    // Velocidad relativa entre los objetos
+    V2 rVel = objB->wVel - objA->wVel;
+
+    // Error del constraint: la diferencia entre la distancia actual y la distancia de descanso
+    double C = currentDistance - restLength;
+
+    // Resolver lambda (multiplicador de Lagrange)
+    double denominator = (objA->invMass + objB->invMass);
+    if (denominator == 0) {
+        std::cout << "Error: denominador es cero al calcular lambda." << std::endl;
+        ConstraintResult result;
+        result.constraintsX = true;
+        result.constraintsY = true;
+        result.constraintsØ = false;
+
+        result.JxA = 0.0;
+        result.JyA = 0.0;
+        result.JxB = 0.0;
+        result.JyB = 0.0;
+
+        result.QxA = 0.0;
+        result.QyA = 0.0;
+        result.QxB = 0.0;
+        result.QyB = 0.0;
+
+        return result;
+    }
+
+    double lambda = -(rVel.dot(j) + C * (1.0 / step)) / denominator;
+
+    // Crear el resultado con los valores correctos
     ConstraintResult result;
 
-    // Posiciones y ángulos actuales de objA y objB
-    V2 posA = objA->wPos;
-    V2 posB = objB->wPos;
-    double angleA = objA->wAngle;
-    double angleB = objB->wAngle;
+    result.JxA = -j.x;
+    result.JyA = -j.y;
+    result.JxB = j.x;
+    result.JyB = j.y;
 
-    // Diferencias de posición y ángulo
-    V2 deltaPos = posB - posA;
-    double deltaAngle = angleB - angleA;
+    // Aplicar las fuerzas calculadas en función de lambda y el Jacobiano
+    result.QxA = lambda * j.x;
+    result.QyA = lambda * j.y;
+    result.QxB = lambda * j.x;
+    result.QyB = lambda * j.y;
 
-    // Velocidades lineales y angulares
-    V2 velA = objA->wVel;
-    V2 velB = objB->wVel;
-    double angularVelA = objA->wAngularVel;
-    double angularVelB = objB->wAngularVel;
-
-    // Jacobiana (J): Restringimos las diferencias de movimiento lineal y angular
-    result.JxA = -1.0; // A debería moverse en la dirección opuesta de B
-    result.JxB = 1.0;
-    result.JyA = -1.0;
-    result.JyB = 1.0;
-    result.JØA = -1.0;
-    result.JØB = 1.0;
-
-    // Fuerzas de reacción (Q): Estas fuerzas intentan reducir el error (delta)
-    result.QxA = deltaPos.x / step; // Dividir el error por el paso de tiempo
-    result.QxB = -deltaPos.x / step;
-    result.QyA = deltaPos.y / step;
-    result.QyB = -deltaPos.y / step;
-    result.QØA = deltaAngle / step;
-    result.QØB = -deltaAngle / step;
-
-    // Indicamos que hay restricciones en los 3 grados de libertad (x, y, Ø)
     result.constraintsX = true;
     result.constraintsY = true;
-    result.constraintsØ = true;
+    result.constraintsØ = false; // No estás resolviendo ángulo por ahora
 
     return result;
 }
-

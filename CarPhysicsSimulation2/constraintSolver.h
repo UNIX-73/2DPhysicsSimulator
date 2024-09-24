@@ -8,14 +8,17 @@
 class ConstraintSolver
 {
 public:
-	ConstraintSolver(double step, std::vector<std::shared_ptr<Constraint>>& constraints) :
-		step(step), constraints(constraints) {};
+	ConstraintSolver();
+	
 	~ConstraintSolver() = default;
 
 
-	void SolveConstraints();
+	void AddConstraint(std::shared_ptr<Constraint>& constraint);
+	void RemoveConstraint(std::shared_ptr<Constraint>& constraint);
 
-	void CholeskySolver(const Matrix& A, const Matrix& B, Matrix* result);
+
+	void SolveConstraints(double step);
+
 
 	void PrintW();
 	void PrintQ();
@@ -25,7 +28,6 @@ public:
 
 private:
 	std::vector<std::shared_ptr<Constraint>> constraints;
-	double step;
 
 	std::vector<std::tuple<int, std::shared_ptr<PhysicsState>>> statesIndex;
 
@@ -39,10 +41,15 @@ private:
 
 	int GetStateIdx(std::shared_ptr<PhysicsState> state);
 
+	void UpdateMatrixVariables();
+
 	void CreateW();
 
 	void Create_q_dot();
 
-	void CreateJacobianAndQ();
+	void CreateJacobianAndQ(double step);
 
+	void CholeskySolver(const Matrix& A, const Matrix& B, Matrix* lambda);
+
+	void ApplyConstraintForces(const Matrix& lambda);
 };
