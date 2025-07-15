@@ -31,8 +31,6 @@ Originally developed on Windows.
 
 - WASD \* - for camera controls
 
-## Build Instructions
-
 ## Known Limitations
 
 - No collision detection or response
@@ -41,5 +39,3 @@ Originally developed on Windows.
 - Latest commits are unstable
 
 ---
-
-Feel free to reach out or open an issue if you have questions about the implementation or numerical methods used.
